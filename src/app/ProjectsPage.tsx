@@ -62,7 +62,7 @@ export default function ProjectsPage() {
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((p, i) => (
-            <ProjectCard key={`${active}-${p.id}`} p={p} i={i} />
+            <ProjectCard key={`${active}-${p.id}`} p={p} i={i} lazy={i >= 6} />
           ))}
         </div>
 

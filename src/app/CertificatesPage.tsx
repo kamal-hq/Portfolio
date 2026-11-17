@@ -100,6 +100,8 @@ const CERTIFICATES: Cert[] = [
   { id: 57, title: "Aspire Leadership Program", issuer: "Aspire Institute", year: "Apr 2026", category: "Other", url: null , image: "/certs/Aspire-Certificate.jpg"},
   { id: 68, title: "IELTS Writing Section Skills Mastery", issuer: "UC Irvine / Coursera", year: "Sep 2026", category: "Other", url: "https://coursera.org/verify/S7VS5HKKPAKL" , image: "/certs/Coursera S7VS5HKKPAKL.jpg"},
   { id: 70, title: "GMI Career Readiness Mentorship Program", issuer: "Global Mentorship Initiative", year: "Oct 2026", category: "Other", url: "https://credentials.globalmentorship.org/credentials/5b355565-8bac-4181-99c0-802b17f0b30c?preview=1" , image: "/certs/5b355565-8bac-4181-99c0-802b17f0b30c.png"},
+  { id: 71, title: "NASA Open Science Essentials", issuer: "NASA / Credly", year: "Nov 2026", category: "Other", url: "https://www.credly.com/badges/4c921438-2205-4974-a436-a6560f970231/public_url" , image: "/certs/OpenScienceEssentials.jpg"},
+  { id: 72, title: "NASA Open Science 101", issuer: "NASA / Credly", year: "Nov 2026", category: "Other", url: "https://www.credly.com/badges/4c09bd86-f53a-4853-aa9d-ab57a8f3abef/public_url" , image: "/certs/OpenScience101.jpg"},
 ];
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
@@ -110,32 +112,51 @@ function CertCard({ cert, index, onImageClick }: { cert: Cert; index: number; on
 
   const showImage = cert.image && !imgFailed;
 
+  const handleImageClick = () => {
+    if (
+      typeof window !== "undefined" &&
+      (window.innerWidth < 768 || window.matchMedia("(hover: none)").matches)
+    ) {
+      onImageClick(cert.image!);
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.4), ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{
+        duration: 0.2,
+        delay: index < 12 ? index * 0.015 : 0,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
       className={`bg-card border rounded-xl p-5 flex flex-col gap-3 hover:border-primary/40 transition-all ${
         isSpecialization ? "border-primary/30" : "border-border"
       }`}
     >
       {/* Image slot */}
       {showImage ? (
-        <div className="w-full aspect-[4/3] rounded-lg overflow-hidden relative group bg-black/5">
+        <div
+          onClick={handleImageClick}
+          className="w-full aspect-[4/3] rounded-lg overflow-hidden relative group bg-secondary/50 cursor-pointer md:cursor-default"
+        >
           <div className="block w-full h-full relative">
             <img
-              src={`/certs/thumbs/${cert.image!.split('/').pop()?.replace(/\.[^/.]+$/, "")}-1440w.webp`}
-              width={720}
-              height={540}
-              loading="lazy"
+              src={`/certs/thumbs/${cert.image!.split('/').pop()?.replace(/\.[^/.]+$/, "")}-640w.webp`}
+              width={640}
+              height={480}
+              loading={index < 12 ? "eager" : "lazy"}
               decoding="async"
               alt={cert.title}
-              className="w-full h-auto object-contain transition-opacity duration-500"
+              className="w-full h-auto object-contain transition-opacity duration-200"
               style={{ imageRendering: "-webkit-optimize-contrast" }}
               onError={() => setImgFailed(true)}
             />
             <button
-              onClick={() => onImageClick(cert.image!)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onImageClick(cert.image!);
+              }}
               className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 backdrop-blur-sm cursor-pointer"
               title="View Certificate"
             >

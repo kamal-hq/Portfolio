@@ -14,11 +14,24 @@ import {
   BarChart3,
   Megaphone,
   Palette,
+  X,
 } from "lucide-react";
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
-const PROJECTS = [
+type Project = {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  category: string;
+  status?: string;
+  image: string;
+  githubUrl?: string;
+  liveUrl?: string;
+};
+
+const PROJECTS: Project[] = [
   // ── Hackathon ────────────────────────────────────────────────────────────────
   {
     id: 1,
@@ -28,6 +41,7 @@ const PROJECTS = [
     tags: ["Python", "CrewAI", "LangChain", "ChromaDB", "Streamlit", "Gemini"],
     category: "AI / ML",
     image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&h=450&fit=crop&auto=format",
+    githubUrl: "https://github.com/kamal-hq/ascend-ai",
   },
   {
     id: 2,
@@ -37,6 +51,7 @@ const PROJECTS = [
     tags: ["Python", "Meta API", "Alibaba Cloud", "Analytics"],
     category: "Marketing Tech",
     image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&h=450&fit=crop&auto=format",
+    githubUrl: "https://github.com/kamal-hq/adlens-pk",
   },
 
   // ── In Progress ──────────────────────────────────────────────────────────────
@@ -49,6 +64,7 @@ const PROJECTS = [
     category: "Data Analytics",
     status: "In Progress",
     image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=450&fit=crop&auto=format",
+    githubUrl: "https://github.com/kamal-hq/sec_13f_analyzer",
   },
   {
     id: 4,
@@ -108,6 +124,17 @@ const PROJECTS = [
     tags: ["Python", "customtkinter", "pynput", "Desktop"],
     category: "Automation",
     image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&h=450&fit=crop&auto=format",
+    githubUrl: "https://github.com/kamal-hq/TypeSimulator",
+  },
+  {
+    id: 13,
+    title: "DeskConvert",
+    description:
+      "Offline Windows desktop utility for PDF and image conversion — supporting PDF/image conversion, merge, split, batch processing, target-size compression, Tesseract OCR, watermarking, and EXIF metadata control with non-destructive staging.",
+    tags: ["Python", "PyMuPDF", "Pillow", "Tesseract OCR", "Desktop"],
+    category: "Automation",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=450&fit=crop&auto=format",
+    githubUrl: "https://github.com/kamal-hq/DeskConvert",
   },
 
   // ── Client & Capstone ────────────────────────────────────────────────────────
@@ -187,11 +214,11 @@ const EXPERIENCE = [
   {
     id: 5,
     type: "Volunteer",
-    role: "SMM / Media Head",
+    role: "Social Media Manager",
     company: "MFKNBS, University of Sargodha",
     period: "Dec 2025 – Present",
     bullets: [
-      "Improved page consistency and content quality as Head of Media Society, leading a team of 8 to establish a structured publishing calendar, resulting in timely uploads and improved visibility after a period of irregular posting.",
+      "Improved page consistency and content quality on the department's official Facebook page, curating, editing, and publishing content from an 8-member media team to maintain 25+ posts monthly and generate 4,000+ impressions through a structured publishing calendar after a period of irregular posting.",
     ],
   },
   {
@@ -298,18 +325,30 @@ const CERTIFICATES_FEATURED = [
 
 function fadeUp(delay = 0) {
   return {
-    initial: { opacity: 0, y: 36 },
+    initial: { opacity: 0, y: 14 },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] },
+    viewport: { once: true, amount: "some" as const, margin: "120px 0px" },
+    transition: {
+      duration: 0.24,
+      delay: Math.min(delay, 0.12),
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
   };
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionLabel({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <div className="flex items-center gap-3 mb-3">
       {/* <span className="h-px w-4 md:w-8 bg-primary block" /> */}
-      <span className="text-primary text-[10px] md:text-xs font-semibold tracking-[0.06em] md:tracking-[0.18em] uppercase leading-snug">
+      <span
+        className={`inline-block text-primary text-[10px] md:text-xs font-semibold tracking-[0.06em] md:tracking-[0.18em] uppercase leading-snug ${className}`}
+      >
         {children}
       </span>
     </div>
@@ -342,7 +381,12 @@ function IntersectionLine() {
   }, []);
 
   return (
-    <motion.div {...fadeUp(0.18)} className="flex flex-col gap-1">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.22, delay: 0.03, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="flex flex-col gap-1"
+    >
       {/* Label line */}
       <p className="text-sm md:text-base text-muted-foreground font-normal tracking-wide">
         I sit at the intersection of
@@ -408,23 +452,27 @@ function Hero() {
 
       <div className="relative max-w-screen-2xl mx-auto px-8 sm:px-12 py-6 w-full">
         <div className="max-w-5xl">
-          <motion.div {...fadeUp(0)} className="mb-5 md:mb-7">
-            <SectionLabel>Business × Technology × Design</SectionLabel>
-          </motion.div>
+          <div className="mb-5 md:mb-7">
+            <SectionLabel className="translate-y-[1rem] md:translate-y-[2rem]">Business × Technology × Design</SectionLabel>
+          </div>
 
-          <motion.h1
-            {...fadeUp(0.08)}
-            className="text-[clamp(3rem,12vw,10rem)] font-black leading-[0.88] tracking-tight uppercase text-foreground mb-5 md:mb-8"
+          <h1
+            className="text-[clamp(3.75rem,12vw,10rem)] font-black leading-[0.88] tracking-tight uppercase text-foreground mb-5 md:mb-8"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Muhammad
             <br />
             <span className="text-primary">Kamal.</span>
-          </motion.h1>
+          </h1>
 
           <IntersectionLine />
 
-          <motion.div {...fadeUp(0.34)} className="mt-7 flex gap-3">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="mt-7 flex gap-3"
+          >
             <button
               onClick={() =>
                 document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })
@@ -457,7 +505,9 @@ function Hero() {
           ].map((s, i) => (
             <motion.div
               key={s.label}
-              {...fadeUp(0.3 + i * 0.08)}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.06 + i * 0.03, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="bg-card/80 backdrop-blur border border-border rounded-lg px-5 py-3 text-right"
             >
               <div
@@ -477,7 +527,12 @@ function Hero() {
   );
 }
 
+const WALKTHROUGH_YOUTUBE_ID = "CBP2-CxzDd8";
+
 function Walkthrough() {
+  const [playing, setPlaying] = useState(false);
+  const [posterSrc, setPosterSrc] = useState("/walkthrough-poster.webp");
+
   return (
     <section id="walkthrough" className="py-14 md:py-20 px-8 sm:px-12">
       <div className="max-w-4xl mx-auto">
@@ -487,42 +542,74 @@ function Walkthrough() {
         </motion.div>
 
         <motion.div
-          {...fadeUp(0.1)}
-          className="relative rounded-2xl overflow-hidden bg-card border border-border aspect-video group cursor-pointer"
+          {...fadeUp(0.05)}
+          className="relative rounded-2xl overflow-hidden bg-card border border-border aspect-video group"
         >
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse at 50% 50%, rgba(255,101,32,0.08) 0%, transparent 65%)",
-            }}
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
-            <button className="w-20 h-20 rounded-full bg-primary flex items-center justify-center shadow-xl shadow-primary/25 group-hover:scale-110 transition-transform">
-              <Play size={28} className="text-white ml-1" fill="white" />
+          {playing ? (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${WALKTHROUGH_YOUTUBE_ID}?autoplay=1&rel=0`}
+              title="Muhammad Kamal — Journey Walkthrough"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full border-0"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setPlaying(true)}
+              aria-label="Play Journey Walkthrough video"
+              className="relative w-full h-full block text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <img
+                src={posterSrc}
+                width={1920}
+                height={1080}
+                decoding="async"
+                alt="Muhammad Kamal — 30-second portfolio walkthrough"
+                onError={() => {
+                  if (posterSrc === "/walkthrough-poster.webp") {
+                    setPosterSrc("/walkthrough-poster.png");
+                  } else {
+                    setPosterSrc(`https://i.ytimg.com/vi/${WALKTHROUGH_YOUTUBE_ID}/maxresdefault.jpg`);
+                  }
+                }}
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-black/25 group-hover:bg-black/15 transition-colors" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="w-20 h-20 rounded-full bg-primary flex items-center justify-center shadow-xl shadow-primary/30 group-hover:scale-110 transition-transform">
+                  <Play size={28} className="text-white ml-1" fill="white" />
+                </span>
+              </div>
             </button>
-            <div className="text-center">
-              <p className="text-foreground font-semibold text-sm">Journey Video</p>
-              <p className="text-muted-foreground text-xs mt-1">
-                Add your YouTube or Vimeo URL here
-              </p>
-            </div>
-          </div>
+          )}
         </motion.div>
       </div>
     </section>
   );
 }
 
-export function ProjectCard({ p, i = 0 }: { p: (typeof PROJECTS)[0]; i?: number }) {
+export function ProjectCard({
+  p,
+  i = 0,
+  lazy = false,
+}: {
+  p: Project;
+  i?: number;
+  lazy?: boolean;
+}) {
   return (
     <motion.article
-      {...fadeUp(i * 0.06)}
+      {...fadeUp(i * 0.04)}
       className="group bg-card border border-border rounded-xl overflow-hidden flex flex-col hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
     >
       <div className="relative w-full aspect-video overflow-hidden bg-secondary">
         <img
           src={p.image}
+          width={800}
+          height={450}
+          loading={lazy ? "lazy" : "eager"}
+          decoding="async"
           alt={p.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -531,26 +618,36 @@ export function ProjectCard({ p, i = 0 }: { p: (typeof PROJECTS)[0]; i?: number 
           {p.category}
         </span>
         {p.status === "In Progress" && (
-          <span className="absolute top-3 right-3 text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-1 rounded-full">
+          <span className="absolute bottom-3 left-3 text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30 backdrop-blur-sm px-2 py-1 rounded-full">
             In Progress
           </span>
         )}
-        <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          <a
-            href="#"
-            className="w-7 h-7 rounded-full bg-background/80 backdrop-blur flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="GitHub"
-          >
-            <Github size={13} />
-          </a>
-          <a
-            href="#"
-            className="w-7 h-7 rounded-full bg-background/80 backdrop-blur flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Live link"
-          >
-            <ExternalLink size={13} />
-          </a>
-        </div>
+        {(p.githubUrl || p.liveUrl) && (
+          <div className="absolute top-3 right-3 flex gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+            {p.githubUrl && (
+              <a
+                href={p.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-full bg-background/80 backdrop-blur flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={`${p.title} GitHub`}
+              >
+                <Github size={13} />
+              </a>
+            )}
+            {p.liveUrl && (
+              <a
+                href={p.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-full bg-background/80 backdrop-blur flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={`${p.title} live link`}
+              >
+                <ExternalLink size={13} />
+              </a>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="p-5 flex flex-col gap-3 flex-1">
@@ -627,8 +724,90 @@ function Projects() {
   );
 }
 
+function FeaturedCertCard({
+  cert,
+  onImageClick,
+}: {
+  cert: (typeof CERTIFICATES_FEATURED)[number];
+  onImageClick: (url: string) => void;
+}) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImage = cert.image && !imgFailed;
+
+  const handleImageClick = () => {
+    if (
+      typeof window !== "undefined" &&
+      (window.innerWidth < 768 || window.matchMedia("(hover: none)").matches)
+    ) {
+      onImageClick(cert.image);
+    }
+  };
+
+  return (
+    <div
+      className="flex-none w-60 md:w-72 bg-card border border-border rounded-xl p-5 flex flex-col gap-3 hover:border-primary/40 transition-all"
+      style={{ scrollSnapAlign: "start" }}
+    >
+      {showImage ? (
+        <div
+          onClick={handleImageClick}
+          className="w-full aspect-[4/3] rounded-lg overflow-hidden relative group bg-secondary/50 cursor-pointer md:cursor-default"
+        >
+          <div className="block w-full h-full relative">
+            <img
+              src={`/certs/thumbs/${cert.image.split("/").pop()?.replace(/\.[^/.]+$/, "")}-640w.webp`}
+              width={640}
+              height={480}
+              loading="eager"
+              decoding="async"
+              alt={cert.title}
+              className="w-full h-auto object-contain transition-opacity duration-200"
+              style={{ imageRendering: "-webkit-optimize-contrast" }}
+              onError={() => setImgFailed(true)}
+            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onImageClick(cert.image);
+              }}
+              className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 backdrop-blur-sm cursor-pointer"
+              title="View Certificate"
+            >
+              <ExternalLink size={14} />
+              <span className="text-xs font-medium pr-1">View</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full aspect-[4/3] rounded-lg bg-secondary flex items-center justify-center group hover:bg-primary/10 transition-colors">
+          <Award
+            size={28}
+            className="text-primary opacity-40 group-hover:opacity-70 transition-opacity"
+          />
+        </div>
+      )}
+      <div className="flex-1">
+        <p className="text-foreground font-semibold text-sm leading-snug">{cert.title}</p>
+        <p className="text-muted-foreground text-xs mt-1">{cert.issuer}</p>
+      </div>
+      <div className="flex items-center justify-between pt-2 border-t border-border">
+        <span className="text-xs font-semibold text-primary">{cert.year}</span>
+        <a
+          href={cert.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+        >
+          Verify <ExternalLink size={11} />
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function Certificates() {
   const ref = useRef<HTMLDivElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
     <section id="certificates" className="py-14 md:py-20 overflow-hidden">
@@ -654,55 +833,16 @@ function Certificates() {
           className="flex gap-4 overflow-x-auto px-8 sm:px-12 pb-2 no-scrollbar"
           style={{ scrollSnapType: "x mandatory", overscrollBehaviorX: "contain", touchAction: "pan-x" }}
         >
-        {CERTIFICATES_FEATURED.map((c, i) => (
-          <motion.div
+        {CERTIFICATES_FEATURED.map((c) => (
+          <FeaturedCertCard
             key={c.id}
-            {...fadeUp(i * 0.05)}
-            className="flex-none w-60 md:w-72 bg-card border border-border rounded-xl p-5 flex flex-col gap-3 hover:border-primary/40 transition-all"
-            style={{ scrollSnapAlign: "start" }}
-          >
-            {c.image ? (
-              <div className="w-full aspect-[4/3] rounded-lg overflow-hidden group">
-                <img
-                  src={`/certs/thumbs/${c.image.split('/').pop()?.replace(/\.[^/.]+$/, "")}-1440w.webp`}
-                  width={720}
-                  height={540}
-                  loading="lazy"
-                  decoding="async"
-                  alt={c.title}
-                  className="w-full h-auto object-contain transition-opacity duration-500"
-                  style={{ imageRendering: "-webkit-optimize-contrast" }}
-                />
-              </div>
-            ) : (
-              <div className="w-full aspect-[4/3] rounded-lg bg-secondary flex items-center justify-center group hover:bg-primary/10 transition-colors">
-                <Award
-                  size={28}
-                  className="text-primary opacity-40 group-hover:opacity-70 transition-opacity"
-                />
-              </div>
-            )}
-            <div className="flex-1">
-              <p className="text-foreground font-semibold text-sm leading-snug">{c.title}</p>
-              <p className="text-muted-foreground text-xs mt-1">{c.issuer}</p>
-            </div>
-            <div className="flex items-center justify-between pt-2 border-t border-border">
-              <span className="text-xs font-semibold text-primary">{c.year}</span>
-              <a
-                href={c.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
-              >
-                Verify <ExternalLink size={11} />
-              </a>
-            </div>
-          </motion.div>
+            cert={c}
+            onImageClick={setSelectedImage}
+          />
         ))}
 
         {/* View all card */}
-        <motion.div
-          {...fadeUp(CERTIFICATES_FEATURED.length * 0.05)}
+        <div
           className="flex-none w-60 md:w-72"
           style={{ scrollSnapAlign: "start" }}
         >
@@ -718,9 +858,38 @@ function Certificates() {
               <p className="text-muted-foreground text-xs mt-1">70+ credentials verified</p>
             </div>
           </Link>
-        </motion.div>
+        </div>
         </div>
       </div>
+
+      {/* Full-size Image Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-background/90 backdrop-blur-sm"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            onClick={() => setSelectedImage(null)}
+            className="absolute top-4 right-4 sm:top-8 sm:right-8 bg-secondary/80 hover:bg-secondary text-foreground p-2 rounded-full transition-colors z-[51]"
+          >
+            <X size={24} />
+          </button>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="relative max-w-5xl w-full max-h-[85vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={selectedImage}
+              alt="Full size certificate"
+              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+            />
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }

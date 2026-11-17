@@ -1,8 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import Root from "./Root";
 import HomePage from "./HomePage";
-import CertificatesPage from "./CertificatesPage";
-import ProjectsPage from "./ProjectsPage";
 
 export const router = createBrowserRouter([
   {
@@ -10,8 +8,18 @@ export const router = createBrowserRouter([
     Component: Root,
     children: [
       { index: true, Component: HomePage },
-      { path: "certificates", Component: CertificatesPage },
-      { path: "projects", Component: ProjectsPage },
+      {
+        path: "certificates",
+        lazy: async () => ({
+          Component: (await import("./CertificatesPage")).default,
+        }),
+      },
+      {
+        path: "projects",
+        lazy: async () => ({
+          Component: (await import("./ProjectsPage")).default,
+        }),
+      },
     ],
   },
 ]);
