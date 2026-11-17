@@ -249,7 +249,7 @@ export default function CertificatesPage() {
             Certificates
           </h1>
           <p className="text-muted-foreground max-w-lg">
-            {CERTIFICATES.length}+ verified credentials across data analytics, AI, marketing,
+            70+ verified credentials across data analytics, AI, marketing,
             Python, and business — all verifiable via the links below.
           </p>
         </div>

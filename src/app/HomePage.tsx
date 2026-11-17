@@ -1052,13 +1052,14 @@ function Contact() {
               href: "https://www.linkedin.com/in/muhammadkamalofficial",
             },
             { Icon: Github, label: "GitHub", href: "https://github.com/kamal-hq/" },
-            { Icon: Download, label: "Download CV", href: "#" },
-          ].map(({ Icon, label, href }) => (
+            { Icon: Download, label: "Download CV", href: "/Muhammad-Kamal-CV.pdf", download: true },
+          ].map(({ Icon, label, href, download }) => (
             <a
               key={label}
               href={href}
+              download={download || undefined}
               target={href.startsWith("http") ? "_blank" : undefined}
-              rel="noopener noreferrer"
+              rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               className="flex items-center gap-2 px-3 py-2.5 md:px-5 bg-card border border-border rounded-full text-sm font-medium text-foreground hover:border-primary/50 hover:text-primary hover:bg-primary/5 transition-all"
               aria-label={label}
             >
